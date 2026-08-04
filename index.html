@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Rivera — Portafolio</title>
+<meta name="description" content="Portafolio de Alex Rivera, desarrollador frontend y creative coder.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo">~/portafolio<span class="cursor">_</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about"><span class="prompt">cd</span> sobre-mi</a>
+      <a href="#projects"><span class="prompt">cd</span> proyectos</a>
+      <a href="#skills"><span class="prompt">cd</span> skills</a>
+      <a href="#experience"><span class="prompt">cd</span> experiencia</a>
+      <a href="#contact" class="nav-cta"><span class="prompt">run</span> contacto.sh</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="crt-overlay" aria-hidden="true"></div>
+    <div class="terminal" role="img" aria-label="Terminal de bienvenida presentando a Alex Rivera, desarrollador frontend y creative coder">
+      <div class="terminal-bar">
+        <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+        <span class="terminal-title">visitante@portafolio: ~</span>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <p class="line"><span class="prompt">$</span> whoami</p>
+        <p class="line out" data-type="Alex Rivera — Desarrollador Frontend &amp; Creative Coder"></p>
+        <p class="line"><span class="prompt">$</span> cat tagline.txt</p>
+        <p class="line out" data-type="&quot;Construyo interfaces que se sienten tan bien como se ven.&quot;"></p>
+        <p class="line"><span class="prompt">$</span> <span class="typed-cursor" id="liveCursor">▮</span></p>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue">↓ desplázate</a>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section" id="about">
+    <p class="cmd-header"><span class="prompt">$</span> cat sobre-mi.md</p>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>Soy desarrollador frontend con base en Ciudad de México, especializado en construir interfaces cuidadas, rápidas y accesibles. Empecé escribiendo scripts para automatizar tareas aburridas y terminé enamorado del detalle: la curva de una transición, el espaciado exacto de un botón, el eco de una animación bien calibrada.</p>
+        <p>Trabajo principalmente con <strong>React</strong>, <strong>TypeScript</strong> y <strong>Node.js</strong>, pero disfruto igual explorando creative coding con Canvas y WebGL. Me interesa el punto donde la ingeniería se vuelve diseño y viceversa.</p>
+        <p class="tagline-serif">Fuera del código: café de filtro, sintetizadores modulares y correr temprano.</p>
+      </div>
+      <div class="about-visual" aria-hidden="true">
+        <div class="node-graph">
+          <span class="node n1"></span><span class="node n2"></span><span class="node n3"></span>
+          <span class="node n4"></span><span class="node n5"></span>
+          <svg viewBox="0 0 200 200"><line x1="40" y1="40" x2="140" y2="60"/><line x1="140" y1="60" x2="160" y2="150"/><line x1="40" y1="40" x2="60" y2="160"/><line x1="60" y1="160" x2="160" y2="150"/><line x1="40" y1="40" x2="160" y2="150"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section class="section" id="skills">
+    <p class="cmd-header"><span class="prompt">$</span> ls -la ./skills</p>
+    <div class="skills-grid reveal">
+      <div class="skills-group">
+        <h3>Frontend</h3>
+        <ul>
+          <li>JavaScript / TypeScript</li>
+          <li>React &amp; Next.js</li>
+          <li>HTML semántico &amp; CSS avanzado</li>
+          <li>Animación &amp; WebGL</li>
+        </ul>
+      </div>
+      <div class="skills-group">
+        <h3>Backend</h3>
+        <ul>
+          <li>Node.js &amp; Express</li>
+          <li>PostgreSQL</li>
+          <li>APIs REST &amp; GraphQL</li>
+          <li>Python (scripting)</li>
+        </ul>
+      </div>
+      <div class="skills-group">
+        <h3>Herramientas</h3>
+        <ul>
+          <li>Git &amp; CI/CD</li>
+          <li>Figma</li>
+          <li>Docker</li>
+          <li>Testing (Jest, Playwright)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="section" id="projects">
+    <p class="cmd-header"><span class="prompt">$</span> ls -la ./proyectos</p>
+    <div class="projects-grid reveal">
+
+      <article class="project-card">
+        <p class="project-perm">drwxr-xr-x  <span class="project-name">nimbus-dashboard/</span></p>
+        <p class="project-desc">Panel de analítica en tiempo real para equipos de soporte, con websockets y visualizaciones interactivas de carga.</p>
+        <div class="project-stack"><span>React</span><span>D3.js</span><span>WebSocket</span></div>
+        <div class="project-links">
+          <a href="#" class="btn-small">Ver demo →</a>
+          <a href="#" class="btn-small ghost">Código</a>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <p class="project-perm">drwxr-xr-x  <span class="project-name">tinta-editor/</span></p>
+        <p class="project-desc">Editor de texto colaborativo minimalista con guardado local y modo offline-first para escritores.</p>
+        <div class="project-stack"><span>TypeScript</span><span>IndexedDB</span><span>CRDT</span></div>
+        <div class="project-links">
+          <a href="#" class="btn-small">Ver demo →</a>
+          <a href="#" class="btn-small ghost">Código</a>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <p class="project-perm">drwxr-xr-x  <span class="project-name">particula-lab/</span></p>
+        <p class="project-desc">Serie de experimentos de creative coding: sistemas de partículas generativos renderizados con Canvas y WebGL.</p>
+        <div class="project-stack"><span>JavaScript</span><span>WebGL</span><span>GLSL</span></div>
+        <div class="project-links">
+          <a href="#" class="btn-small">Ver demo →</a>
+          <a href="#" class="btn-small ghost">Código</a>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <p class="project-perm">drwxr-xr-x  <span class="project-name">ruta-api/</span></p>
+        <p class="project-desc">API REST para planeación de rutas de reparto con optimización de trayectos y panel de administración.</p>
+        <div class="project-stack"><span>Node.js</span><span>PostgreSQL</span><span>Docker</span></div>
+        <div class="project-links">
+          <a href="#" class="btn-small">Ver demo →</a>
+          <a href="#" class="btn-small ghost">Código</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="section" id="experience">
+    <p class="cmd-header"><span class="prompt">$</span> git log --oneline --graph experiencia</p>
+    <ol class="commit-log reveal">
+      <li class="commit">
+        <span class="hash">7a3f9c2</span>
+        <span class="date">2024 — hoy</span>
+        <span class="msg">Desarrollador Frontend Senior @ Estudio Lumen</span>
+        <p class="commit-detail">Lidero la arquitectura frontend de productos SaaS y mentoreo a un equipo de 4 desarrolladores.</p>
+      </li>
+      <li class="commit">
+        <span class="hash">c81e004</span>
+        <span class="date">2022 — 2024</span>
+        <span class="msg">Desarrollador Full-Stack @ Nodo Studio</span>
+        <p class="commit-detail">Construí y mantuve APIs y dashboards para clientes de retail y logística.</p>
+      </li>
+      <li class="commit">
+        <span class="hash">4f2b118</span>
+        <span class="date">2020 — 2022</span>
+        <span class="msg">Desarrollador Frontend Jr. @ Pixelforge</span>
+        <p class="commit-detail">Primeros pasos profesionales construyendo interfaces con React y Sass.</p>
+      </li>
+      <li class="commit">
+        <span class="hash">0a91d3e</span>
+        <span class="date">2020</span>
+        <span class="msg">Ingeniería en Sistemas — Universidad Nacional</span>
+        <p class="commit-detail">Titulación con proyecto final sobre visualización de datos en tiempo real.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section" id="contact">
+    <p class="cmd-header"><span class="prompt">$</span> ./contacto.sh --enviar</p>
+    <div class="contact-grid reveal">
+      <form class="contact-form" id="contactForm">
+        <label for="name">nombre</label>
+        <input type="text" id="name" name="name" required placeholder="tu-nombre">
+
+        <label for="email">email</label>
+        <input type="email" id="email" name="email" required placeholder="tu@email.com">
+
+        <label for="message">mensaje</label>
+        <textarea id="message" name="message" rows="5" required placeholder="Escribe tu mensaje aquí..."></textarea>
+
+        <button type="submit" class="btn-small submit-btn"><span class="prompt">$</span> enviar --to=alex</button>
+        <p class="form-response" id="formResponse" aria-live="polite"></p>
+      </form>
+      <div class="contact-links">
+        <a href="mailto:alex.rivera@example.com" class="btn-small ghost full">email</a>
+        <a href="#" class="btn-small ghost full">github</a>
+        <a href="#" class="btn-small ghost full">linkedin</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p><span class="prompt">$</span> exit — © 2026 Alex Rivera. Todos los derechos reservados.</p>
+  <a href="#top" class="back-top">volver arriba ↑</a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
