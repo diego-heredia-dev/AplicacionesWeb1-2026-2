@@ -6,3 +6,5 @@ id_rsa
 .env 
 __pycache__/
 volume_pg_container/
+Comandos.txt
+scripts_volume
