@@ -1,0 +1,1 @@
+Seq Scan 3.109 ms → Bitmap Heap Scan + Bitmap Index Scan 0.176 ms

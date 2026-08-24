@@ -1,0 +1,11 @@
+BEFORE
+Seq Scan
+Execution Time: 0.491 ms
+
+AFTER
+Bitmap Index Scan + Bitmap Heap Scan
+Execution Time: 0.560 ms
+
+Conclusion:
+The index was used successfully, but with 5,000 rows the indexed query
+was slightly slower than the sequential scan.
