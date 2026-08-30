@@ -1,0 +1,25 @@
+-- Buscar reservas de una fecha
+SELECT *
+FROM content.reservations
+WHERE reservation_date = '2026-08-20';
+
+-- Buscar órdenes de un cliente
+SELECT *
+FROM content.orders
+WHERE customer_id = '...';
+
+-- Buscar órdenes de un empleado
+SELECT *
+FROM content.orders
+WHERE employee_id = '...';
+
+-- Buscar órdenes de una determinada fecha
+SELECT *
+FROM content.orders
+WHERE order_date = '2026-08-20';
+
+Mi primera propuesta sería crear índices para:
+reservations.reservation_date
+orders.customer_id
+orders.employee_id
+orders.order_date
