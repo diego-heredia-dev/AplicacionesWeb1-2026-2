@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ restaurante.nombre}} - La Carta{% endblock %}
+
+{% block content %}
+<h1>{{ restaurante.nombre }}</h1>
+
+<p><strong>Ciudad:</strong> {{ restaurante.ciudad}}</p>
+
+{% if restaurante.direccion %}
+<p><strong>Direccion:</strong> {{ restaurante.direccion}}</p>
+{% endif %}
+
+{% if restaurante.telefono %}
+<p><strong>Telefono:</strong> {{ restaurante.telefono}}</p>
+{% endif %}
+
+<h2>Platos</h2>
+
+{% if restaurante.platos %}
+    <ul>
+        {% for plato in restaurante.platos %}
+            <li>
+                <strong>{{ plato.nombre }}</strong> - Bs {{ plato.precio }}
+
+                {% if plato.disponible %}
+                - Disponible
+                { else }
+                - No disponible
+                {% endif%}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>No hay platos disponibles</p>
+{% endif %}
+<a href="{{ url_for('listar_restaurantes') }}">Volver a restaurantes</a>
+{% endblock %}
