@@ -15,6 +15,7 @@
                 <strong>{{ restaurante.nombre }}</strong>
                 - {{ restaurante.ciudad }}
                 - {{ restaurante.platos|length }} platos
+                <a href="{{ url_for('detalle_restaurante', restaurante_id=restaurante.id)}}">Ver platos</a>
             </li>
         {% endfor %}
     </ul>
