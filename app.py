@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -47,6 +47,24 @@ def salud():
         "status": "ok",
         "restaurantes_registrados": total
     })
+
+@app.route("/restaurantes")
+def listar_restaurantes():
+    restaurantes = Restaurante.query.order_by(Restaurante.nombre).all()
+
+    return render_template(
+        'restaurantes/index.html',
+        restaurantes=restaurantes
+    )
+
+@app.route("/restaurantes/<int:restaurante_id>")
+def detalle_restaurante(restaurante_id):
+    restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+    return render_template(
+        'restaurantes/detalle.html',
+        restaurante=restaurante
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)
