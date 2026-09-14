@@ -105,5 +105,49 @@ def crear_restaurante():
     finally:
         db.session.close()
 
+@app.route('/restaurantes/<int:restaurante_id>/editar', methods=['GET', 'POST'])
+def editar_restaurante(restaurante_id):
+    restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+    if request.method == 'GET':
+        return render_template(
+            'restaurantes/editar.html',
+            restaurante=restaurante)
+
+    nombre = request.form.get('nombre', '').strip()
+    ciudad = request.form.get('ciudad', '').strip()
+    direccion = request.form.get('direccion', '').strip()
+    telefono = request.form.get('telefono', '').strip()
+
+    if not nombre or not ciudad:
+        flash('El nombre y ciudad son obligatorios', 'error')
+        return render_template(
+            'restaurantes/editar.html',
+            restaurante=restaurante
+        )
+
+    restaurante.nombre = nombre
+    restaurante.ciudad = ciudad 
+    restaurante.direccion = direccion
+    restaurante.telefono = telefono
+
+    try:
+        db.session.commit()
+        flash('Restaurante actualizado correctamente', 'success')
+        return redirect(
+            url_for('detalle_restaurante', restaurante_id=restaurante.id)
+        )
+
+    except Exception:
+        db.session.rollback()
+        flash('No se pudo actualizar el restaurante', 'error')
+        return render_template(
+            'restaurante/editar.html',
+            restaurante=restaurante
+        )
+
+    finally:
+        db.session.close()
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)
