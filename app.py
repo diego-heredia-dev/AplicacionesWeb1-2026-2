@@ -51,7 +51,17 @@ def salud():
 
 @app.route("/restaurantes")
 def listar_restaurantes():
-    restaurantes = Restaurante.query.order_by(Restaurante.nombre).all()
+    ciudad = request.args.get('ciudad', '').strip()
+
+    query = Restaurante.query
+
+    #Agrega un filtro al query
+    if ciudad:
+        query = query.filter(
+            Restaurante.ciudad.like(ciudad)
+        )
+
+    restaurantes = query.order_by(Restaurante.nombre).all()
 
     return render_template(
         'restaurantes/index.html',
