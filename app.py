@@ -1,10 +1,11 @@
 import os
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -65,6 +66,44 @@ def detalle_restaurante(restaurante_id):
         'restaurantes/detalle.html',
         restaurante=restaurante
     )
+
+@app.route("/restaurantes/crear", methods=['GET', 'POST'])
+def crear_restaurante():
+    
+    if request.method == 'GET':
+        return render_template('restaurantes/crear.html')
+
+    print("LLEGUÉ AL POST DE CREAR RESTAURANTE")
+    
+    nombre = request.form.get('nombre', '').strip()
+    ciudad = request.form.get('ciudad', '').strip()
+    direccion = request.form.get('direccion', '').strip()
+    telefono = request.form.get('telefono', '').strip()
+
+    if not nombre or not ciudad:
+        flash('El nombre y la ciudad son obligatorios', 'error')
+        return render_template('restaurantes/crear.html')
+
+    restaurante = Restaurante(
+        nombre=nombre,
+        ciudad=ciudad,
+        direccion=direccion or None,
+        telefono=telefono or None
+    )
+
+    try:
+        db.session.add(restaurante)
+        db.session.commit()
+        flash('Restaurante creado correctamente', 'success')
+        return redirect(url_for('listar_restaurantes'))
+
+    except Exception as e:
+        db.session.rollback()
+        print("ERROR AL CREAR RESTAURANTE:", e)
+        flash('No se udo crear el restaurante', 'error')
+    
+    finally:
+        db.session.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)
