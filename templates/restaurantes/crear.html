@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}Crear restaurante - La Carta{% endblock %}
+
+{% block content %}
+<h1>Crear restaurante</h1>
+
+<form method="POST" action="{{ url_for('crear_restaurante') }}">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre">
+
+    <label for="ciudad">Ciudad:</label>
+    <input type="text" id="ciudad" name="ciudad">
+
+    <label for="direccion">Direccion:</label>
+    <input type="text" id="direccion" name="direccion">
+
+    <label for="telefono">Telefono:</label>
+    <input type="tel" id="telefono" name="telefono">
+
+    <button type="submit">Crear restaurante</button>
+</form>
+
+<a href="{{url_for('listar_restaurantes')}}">Cancelar</a>
+
+{% endblock %}
