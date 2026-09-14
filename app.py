@@ -149,5 +149,24 @@ def editar_restaurante(restaurante_id):
     finally:
         db.session.close()
 
+@app.route('/restaurante/<int:restaurante_id>/eliminar', methods=['POST'])
+def eliminar_restaurante(restaurante_id):
+    restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+    try:
+        db.session.delete(restaurante)
+        db.session.commit()
+        flash('Restaurante eliminado correctamente', 'success')
+        return redirect(url_for('listar_restaurantes'))
+
+    except Exception as e:
+        db.session.rollback()
+        print('Error al eliminar:', e)
+        flash('No se pudo eliminar el restaurante', 'error')
+        return redirect(url_for('listar_restaurantes'))
+
+    finally:
+        db.session.close()
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)

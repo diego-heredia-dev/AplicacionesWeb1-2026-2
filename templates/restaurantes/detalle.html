@@ -4,6 +4,12 @@
 
 {% block content %}
 <h1>{{ restaurante.nombre }}</h1>
+<a href="{{url_for('editar_restaurante', restaurante_id=restaurante.id)}}">
+    Editar restaurante
+</a>
+<form method="POST" action="{{url_for('eliminar_restaurante', restaurante_id=restaurante.id)}}">
+    <button type="submit">Eliminar restaurante</button>
+</form>
 
 <p><strong>Ciudad:</strong> {{ restaurante.ciudad}}</p>
 
