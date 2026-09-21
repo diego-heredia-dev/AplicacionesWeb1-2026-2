@@ -79,11 +79,8 @@ def detalle_restaurante(restaurante_id):
 
 @app.route("/restaurantes/crear", methods=['GET', 'POST'])
 def crear_restaurante():
-    
     if request.method == 'GET':
         return render_template('restaurantes/crear.html')
-
-    print("LLEGUÉ AL POST DE CREAR RESTAURANTE")
     
     nombre = request.form.get('nombre', '').strip()
     ciudad = request.form.get('ciudad', '').strip()
@@ -107,10 +104,10 @@ def crear_restaurante():
         flash('Restaurante creado correctamente', 'success')
         return redirect(url_for('listar_restaurantes'))
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
-        print("ERROR AL CREAR RESTAURANTE:", e)
         flash('No se pudo crear el restaurante', 'error')
+        return render_template('restaurantes/crear.html')
     
     finally:
         db.session.close()
@@ -152,7 +149,7 @@ def editar_restaurante(restaurante_id):
         db.session.rollback()
         flash('No se pudo actualizar el restaurante', 'error')
         return render_template(
-            'restaurante/editar.html',
+            'restaurantes/editar.html',
             restaurante=restaurante
         )
 
@@ -225,10 +222,6 @@ def agregar_plato(restaurante_id):
 
     finally:
         db.session.close()
-
-@app.route("/prueba-500")
-def prueba_500():
-    raise Exception("Error de prueba")
 
 
 @app.errorhandler(404)
