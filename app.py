@@ -226,11 +226,20 @@ def agregar_plato(restaurante_id):
     finally:
         db.session.close()
 
+@app.route("/prueba-500")
+def prueba_500():
+    raise Exception("Error de prueba")
+
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404
 
+@app.errorhandler(500)
+def error_interno(error):
+    db.session.rollback()
+
+    return render_template('500.html'), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)
