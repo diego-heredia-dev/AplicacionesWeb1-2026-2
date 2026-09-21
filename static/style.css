@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+form {
+    margin: 20px 0;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    margin-top: 5px;
+    padding: 5px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 8px 12px;
+}
+
+.flash {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid;
+}
+
+.flash.success {
+    border-color: green;
+}
+
+.flash.error {
+    border-color: red;
+}
