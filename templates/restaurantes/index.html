@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}Restaurantes - La Carta{% endblock %}
+
+{% block content %}
+
+<h1>Restaurantes</h1>
+
+<a href="{{url_for('crear_restaurante')}}">Crear restaurante</a>
+
+<a href="{{ url_for('listar_restaurantes') }}">Actualizar</a>
+
+{% if restaurantes %}
+    <ul>
+        {% for restaurante in restaurantes %}
+            <li>
+                <strong>{{ restaurante.nombre }}</strong>
+                - {{ restaurante.ciudad }}
+                - {{ restaurante.platos|length }} platos
+                <a href="{{ url_for('detalle_restaurante', restaurante_id=restaurante.id)}}">Ver platos</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>No hay restaurantes registrados.</p>
+
+{% endif %}
+
+{% endblock %}

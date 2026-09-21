@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ restaurante.nombre}} - La Carta{% endblock %}
+
+{% block content %}
+<h1>{{ restaurante.nombre }}</h1>
+<a href="{{url_for('editar_restaurante', restaurante_id=restaurante.id)}}">
+    Editar restaurante
+</a>
+<form method="POST" action="{{url_for('eliminar_restaurante', restaurante_id=restaurante.id)}}">
+    <button type="submit">Eliminar restaurante</button>
+</form>
+
+<p><strong>Ciudad:</strong> {{ restaurante.ciudad}}</p>
+
+{% if restaurante.direccion %}
+<p><strong>Direccion:</strong> {{ restaurante.direccion}}</p>
+{% endif %}
+
+{% if restaurante.telefono %}
+<p><strong>Telefono:</strong> {{ restaurante.telefono}}</p>
+{% endif %}
+
+<h2>Platos</h2>
+
+{% if restaurante.platos %}
+    <ul>
+        {% for plato in restaurante.platos %}
+            <li>
+                <strong>{{ plato.nombre }}</strong> - Bs {{ plato.precio }}
+
+                {% if plato.disponible %}
+                - Disponible
+                {% else %}
+                - No disponible
+                {% endif%}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>No hay platos disponibles</p>
+{% endif %}
+
+<h2>Agregar plato</h2>
+
+<form method="POST" action="{{url_for('agregar_plato', restaurante_id=restaurante.id)}}">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+
+    <label for="precio">Precio:</label>
+    <input type="number" id="precio" name="precio" step="0.01" min="0.01" required>
+
+    <label>
+        Disponible:
+        <input type="checkbox" name="disponible" checked>
+    </label>
+
+    <button type="submit">Agregar plato</button>
+</form>
+
+<a href="{{ url_for('listar_restaurantes') }}">Volver a restaurantes</a>
+
+{% endblock %}
+
