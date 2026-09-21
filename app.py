@@ -58,7 +58,7 @@ def listar_restaurantes():
     #Agrega un filtro al query
     if ciudad:
         query = query.filter(
-            Restaurante.ciudad.like(ciudad)
+            Restaurante.ciudad.ilike(ciudad)
         )
 
     restaurantes = query.order_by(Restaurante.nombre).all()
@@ -110,7 +110,7 @@ def crear_restaurante():
     except Exception as e:
         db.session.rollback()
         print("ERROR AL CREAR RESTAURANTE:", e)
-        flash('No se udo crear el restaurante', 'error')
+        flash('No se pudo crear el restaurante', 'error')
     
     finally:
         db.session.close()
@@ -159,7 +159,7 @@ def editar_restaurante(restaurante_id):
     finally:
         db.session.close()
 
-@app.route('/restaurante/<int:restaurante_id>/eliminar', methods=['POST'])
+@app.route('/restaurantes/<int:restaurante_id>/eliminar', methods=['POST'])
 def eliminar_restaurante(restaurante_id):
     restaurante = db.get_or_404(Restaurante, restaurante_id)
 
@@ -177,6 +177,56 @@ def eliminar_restaurante(restaurante_id):
 
     finally:
         db.session.close()
+
+@app.route('/restaurantes/<int:restaurante_id>/platos', methods=['POST'])
+def agregar_plato(restaurante_id):
+    restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+    nombre = request.form.get('nombre', '').strip()
+    precio = request.form.get('precio', '').strip()
+    disponible = request.form.get('disponible') == 'on' #Es una comparación que convierte ese resultado en un booleano:
+
+    if not nombre or not precio:
+        flash('El nombre y el precio son obligatorios', 'error')
+        return redirect(
+            url_for('detalle_restaurante', restaurante_id=restaurante.id)
+        )
+
+    try:
+        precio = float(precio)
+
+        if precio <= 0:
+            raise ValueError
+
+    except ValueError:
+        flash('El precio debe ser mayor que 0', 'error')
+        return redirect(
+            url_for('detalle_restaurante', restaurante_id=restaurante.id)
+        )
+
+    plato = Plato(
+        nombre=nombre,
+        precio=precio,
+        disponible=disponible,
+        restaurante_id=restaurante.id
+    )
+
+    try:
+        db.session.add(plato)
+        db.session.commit()
+
+        flash('Plato agregado correctamente', 'success')
+        return redirect(url_for('detalle_restaurante', restaurante_id=restaurante.id))
+
+    except Exception:
+        db.session.rollback()
+        flash('No se pudo agregar el plato', 'error')
+        return redirect(url_for('detalle_restaurante', restaurante_id=restaurante.id))
+
+    finally:
+        db.session.close()
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)
