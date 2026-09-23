@@ -9,6 +9,9 @@ done
 
 echo "PostgreSQL is ready."
 
+mkdir -p /static
+cp -r /opt/static-dist/. /static/
+
 flask --app wsgi db upgrade
 
 exec "$@"
