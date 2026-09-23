@@ -18,3 +18,21 @@ def index():
         return redirect(url_for("todos.index"))
     todos = Todo.query.order_by(Todo.created_at.desc()).all()
     return render_template("index.html", todos=todos)
+
+@bp.route("/todos/<int:todo_id>/complete", methods=["POST"])
+def complete(todo_id):
+    todo = Todo.query.get_or_404(todo_id)
+
+    todo.completed = True
+    db.session.commit()
+
+    return redirect(url_for("todos.index"))
+
+@bp.route("/todos/<int:todo_id>/delete", methods=["POST"])
+def delete(todo_id):
+    todo = Todo.query.get_or_404(todo_id)
+
+    db.session.delete(todo)
+    db.session.commit()
+
+    return redirect(url_for("todos.index"))

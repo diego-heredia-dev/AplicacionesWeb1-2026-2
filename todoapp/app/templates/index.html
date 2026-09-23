@@ -22,6 +22,18 @@
         {% for todo in todos %}
             <li>
                 {{ todo.title }}
+
+                {% if not todo.completed %}
+                    <form method="POST" action="{{url_for('todos.complete', todo_id=todo.id)}}">
+                        <button type="submit">Completar</button>
+                    </form>
+
+                    <form method="POST" action="{{url_for('todos.delete', todo_id=todo.id)}}">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                {% else %}
+                    <strong>completada</strong>
+                {% endif %}
             </li>
         {% else %}
             <li>No hay tareas todavía.</li>
