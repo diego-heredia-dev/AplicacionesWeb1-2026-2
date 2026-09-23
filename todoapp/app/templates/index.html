@@ -6,5 +6,26 @@
 </head>
 <body>
     <h1>Todo App</h1>
+
+    <form method="POST">
+        <input
+            type="text"
+            name="title"
+            placeholder="Nueva tarea"
+            maxlength="200"
+            required
+        >
+        <button type="submit">Agregar</button>
+    </form>
+
+    <ul>
+        {% for todo in todos %}
+            <li>
+                {{ todo.title }}
+            </li>
+        {% else %}
+            <li>No hay tareas todavía.</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
