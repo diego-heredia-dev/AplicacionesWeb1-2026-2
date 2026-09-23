@@ -12,6 +12,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN mkdir -p /opt/static-dist \
+    && cp -r app/static/. /opt/static-dist/ \
+    && chmod +x entrypoint.sh
+
 EXPOSE 5000
 
-CMD ["python", "-m", "flask", "--app", "wsgi", "run", "--host=0.0.0.0", "--port=5000"]
+ENTRYPOINT ["./entrypoint.sh"]
+
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "wsgi:app"]
