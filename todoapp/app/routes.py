@@ -36,3 +36,21 @@ def delete(todo_id):
     db.session.commit()
 
     return redirect(url_for("todos.index"))
+
+@bp.route("/todos/<int:todo_id>/edit", methods=["GET", "POST"])
+def edit(todo_id):
+    todo = Todo.query.get_or_404(todo_id)
+
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        descripcion = request.form.get("description", "").strip()
+
+        if title:
+            todo.title = title
+            todo.descripcion = descripcion
+
+            db.session.commit()
+
+            return redirect(url_for("todos.index"))
+
+    return render_template("edit.html", todo=todo)

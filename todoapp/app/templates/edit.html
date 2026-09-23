@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar tarea</title>
+</head>
+<body>
+    <h1>Editar tarea</h1>
+
+    <form method="POST">
+        <div>
+            <label for="title">Título</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="{{ todo.title }}"
+                maxlength="200"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="description">Descripción</label>
+            <textarea
+                id="description"
+                name="description"
+            >{{ todo.description or "" }}</textarea>
+        </div>
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+    <a href="{{ url_for('todos.index') }}">Cancelar</a>
+</body>
+</html>
