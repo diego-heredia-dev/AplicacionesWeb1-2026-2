@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+</head>
+<body>
+    <h1>Todo App</h1>
+
+    <form method="POST">
+        <input
+            type="text"
+            name="title"
+            placeholder="Nueva tarea"
+            maxlength="200"
+            required
+        >
+        <button type="submit">Agregar</button>
+    </form>
+
+    <ul>
+        {% for todo in todos %}
+            <li>
+                {{ todo.title }}
+
+                {% if not todo.completed %}
+                    <form method="POST" action="{{url_for('todos.complete', todo_id=todo.id)}}">
+                        <button type="submit">Completar</button>
+                    </form>
+
+                    <form method="POST" action="{{url_for('todos.delete', todo_id=todo.id)}}">
+                        <button type="submit">Eliminar</button>
+                    </form>
+
+                    <a href="{{ url_for('todos.edit', todo_id=todo.id) }}">
+                        Editar
+                    </a>
+                {% else %}
+                    <strong>completada</strong>
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No hay tareas todavía.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
