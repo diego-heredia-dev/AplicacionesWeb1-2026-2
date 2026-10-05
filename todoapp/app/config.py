@@ -8,6 +8,6 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "postgresql://todo:todo@localhost:5432/todoapp"
+        "postgresql+psycopg2://todo:todo@localhost:5432/todoapp"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -18,7 +18,7 @@ services:
   web:
     build: .
     environment:
-      DATABASE_URL: postgresql://todo:todo@db:5432/todoapp
+      DATABASE_URL: postgresql+psycopg2://todo:todo@db:5432/todoapp
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
     depends_on:
       db:
