@@ -2,6 +2,7 @@ from flask import Flask
 
 from .config import Config
 from .extensions import db, migrate
+from .routes import main
 
 #Application Factory
 def create_app():
@@ -15,5 +16,7 @@ def create_app():
     db.init_app(app)
     #configura migrate para trabajar con la app y la db
     migrate.init_app(app, db)
+    #Flask incorpora las rutas main a la aplicacion
+    app.register_blueprint(main)
 
     return app
