@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de platos{% endblock %}
+
+{% block content %}
+
+<h1>Gestión de platos</h1>
+
+<a href="{{ url_for('main.crear_plato') }}">Registrar nuevo plato</a>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% for categoria, mensaje in mensajes %}
+        <p class="mensaje">{{ mensaje }}</p>
+    {% endfor %}
+{% endwith %}
+
+{% if platos %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Disponible</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for plato in platos %}
+                <tr>
+                    <td>{{ plato.name }}</td>
+                    <td>{{ plato.description or 'Sin descripción' }}</td>
+                    <td>{{ "%.2f"|format(plato.price) }}</td>
+                    <td>{{ plato.category.name }}</td>
+                    <td>{{ 'Sí' if plato.available else 'No' }}</td>
+
+                    <td>
+                        <div class="acciones">
+                            <a href="{{ url_for('main.editar_plato', plato_id=plato.menu_item_id) }}">
+                                Editar
+                            </a>
+
+                            <form
+                                action="{{ url_for('main.eliminar_plato', plato_id=plato.menu_item_id) }}"
+                                method="POST"
+                                onsubmit="return confirm('¿Seguro que deseas eliminar este plato?');"
+                            >
+                                <button type="submit" class="boton-eliminar">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+
+    <p>No hay platos registrados.</p>
+
+{% endif %}
+
+{% endblock %}
