@@ -462,7 +462,7 @@ def poblar_base_datos():
 
         print(f"\nError durante la carga: {error}")
         raise
-
+ 
     finally:
         db.session.remove()
 
