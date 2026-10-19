@@ -3,7 +3,8 @@
 *.key 
 id_ed25519 
 id_rsa 
-.env 
+.env
+.env.*
 __pycache__/
 volume_pg_container/
 Comandos.txt

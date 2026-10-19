@@ -1,0 +1,53 @@
+services:
+  web:
+    build: .
+    container_name: restaurant_web
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    networks:
+      - restaurant_network
+  
+  db:
+    image: postgres:16-alpine
+    container_name: restaurant_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: restaurant_db
+      POSTGRES_USER: restaurant_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - restaurant_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U restaurant_user -d restaurant_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - restaurant_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: restaurant_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes: #:ro significa read only
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app/static:/app/app/static:ro
+    depends_on:
+      - web
+    networks:
+      - restaurant_network
+
+volumes:
+  restaurant_data:
+
+networks:
+  restaurant_network:
+    driver: bridge
