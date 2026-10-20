@@ -1,5 +1,14 @@
-from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for,
+from decimal import Decimal, InvalidOperation
 
+from flask import (
+    Blueprint,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 
 from .extensions import db
 from .models import Plato, Restaurante
@@ -76,23 +85,35 @@ def crear_restaurante():
     try:
         db.session.add(restaurante)
         db.session.commit()
-        flash("Restaurante creado correctamente.", "success",)
-        return redirect(url_for("restaurantes.listar_restaurantes"))
+
+        flash("Restaurante creado correctamente.", "success")
+
+        return redirect(
+            url_for("restaurantes.listar_restaurantes")
+        )
 
     except Exception:
         db.session.rollback()
         flash("No se pudo crear el restaurante.", "error")
+
         return render_template("restaurantes/crear.html")
 
-    finally:
-        db.session.close()
 
-@bp.route("/restaurantes/<int:restaurante_id>/editar", methods=["GET", "POST"])
+@bp.route(
+    "/restaurantes/<int:restaurante_id>/editar",
+    methods=["GET", "POST"],
+)
 def editar_restaurante(restaurante_id):
-    restaurante = db.get_or_404(Restaurante, restaurante_id)
+    restaurante = db.get_or_404(
+        Restaurante,
+        restaurante_id,
+    )
 
     if request.method == "GET":
-        return render_template("restaurantes/editar.html", restaurante=restaurante)
+        return render_template(
+            "restaurantes/editar.html",
+            restaurante=restaurante,
+        )
 
     nombre = request.form.get("nombre", "").strip()
     ciudad = request.form.get("ciudad", "").strip()
@@ -101,7 +122,11 @@ def editar_restaurante(restaurante_id):
 
     if not nombre or not ciudad:
         flash("El nombre y la ciudad son obligatorios.", "error")
-        return render_template("restaurantes/editar.html", restaurante=restaurante)
+
+        return render_template(
+            "restaurantes/editar.html",
+            restaurante=restaurante,
+        )
 
     restaurante.nombre = nombre
     restaurante.ciudad = ciudad
@@ -110,16 +135,24 @@ def editar_restaurante(restaurante_id):
 
     try:
         db.session.commit()
+
         flash("Restaurante actualizado correctamente.", "success")
-        return redirect(url_for("restaurantes.detalle_restaurante", restaurante_id=restaurante.id))
+
+        return redirect(
+            url_for(
+                "restaurantes.detalle_restaurante",
+                restaurante_id=restaurante.id,
+            )
+        )
 
     except Exception:
         db.session.rollback()
         flash("No se pudo actualizar el restaurante.", "error")
-        return render_template("restaurantes/editar.html", restaurante=restaurante)
 
-    finally:
-        db.session.close()
+        return render_template(
+            "restaurantes/editar.html",
+            restaurante=restaurante,
+        )
 
 
 @bp.route(
@@ -127,11 +160,15 @@ def editar_restaurante(restaurante_id):
     methods=["POST"],
 )
 def eliminar_restaurante(restaurante_id):
-    restaurante = db.get_or_404(Restaurante, restaurante_id)
+    restaurante = db.get_or_404(
+        Restaurante,
+        restaurante_id,
+    )
 
     try:
         db.session.delete(restaurante)
         db.session.commit()
+
         flash("Restaurante eliminado correctamente.", "success")
 
     except Exception:
@@ -148,33 +185,40 @@ def eliminar_restaurante(restaurante_id):
     methods=["POST"],
 )
 def agregar_plato(restaurante_id):
-    restaurante = db.get_or_404(Restaurante, restaurante_id)
+    restaurante = db.get_or_404(
+        Restaurante,
+        restaurante_id,
+    )
 
     nombre = request.form.get("nombre", "").strip()
-    precio = request.form.get("precio", "").strip()
+    precio_formulario = request.form.get("precio", "").strip()
     disponible = request.form.get("disponible") == "on"
 
-    if not nombre or not precio:
+    if not nombre or not precio_formulario:
         flash("El nombre y el precio son obligatorios.", "error")
 
         return redirect(
-            url_for("restaurantes.detalle_restaurante", restaurante_id=restaurante.id)
+            url_for(
+                "restaurantes.detalle_restaurante",
+                restaurante_id=restaurante.id,
+            )
         )
 
     try:
-        precio = float(precio)
-        if precio <= 0:
-            raise ValueError
+        precio = Decimal(precio_formulario)
 
-    except ValueError:
+        if not precio.is_finite() or precio <= 0:
+            raise InvalidOperation
+
+    except (InvalidOperation, ValueError):
         flash("El precio debe ser un número mayor que 0.", "error")
 
         return redirect(
-            url_for("restaurantes.detalle_restaurante", restaurante_id=restaurante.id)
+            url_for(
+                "restaurantes.detalle_restaurante",
+                restaurante_id=restaurante.id,
+            )
         )
-
-    finally:
-        db.session.close()
 
     plato = Plato(
         nombre=nombre,
@@ -186,6 +230,7 @@ def agregar_plato(restaurante_id):
     try:
         db.session.add(plato)
         db.session.commit()
+
         flash("Plato agregado correctamente.", "success")
 
     except Exception:
@@ -193,5 +238,8 @@ def agregar_plato(restaurante_id):
         flash("No se pudo agregar el plato.", "error")
 
     return redirect(
-        url_for("restaurantes.detalle_restaurante", restaurante_id=restaurante.id)
+        url_for(
+            "restaurantes.detalle_restaurante",
+            restaurante_id=restaurante.id,
+        )
     )

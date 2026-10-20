@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - datos_pg:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -74,4 +74,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  datos_pg:
+  postgres_data:

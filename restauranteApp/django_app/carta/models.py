@@ -30,8 +30,8 @@ class Plato(models.Model):
         ordering = ["nombre"]
         constraints = [
             models.CheckConstraint(
-                condition=Q(precio__gte=0),
-                name="carta_plato_precio_no_negativo",
+                condition=Q(precio__gt=0),
+                name="carta_plato_precio_positivo",
             ),
         ]
 
