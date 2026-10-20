@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block title %}Error interno - La Carta{% endblock %}
+
+{% block content %}
+<h1>500 - Error interno del servidor</h1>
+<p>Ocurrio un error inesperado. Intenta nuevamente mas tarde</p>
+
+<a href="{{url_for('listar_restaurantes')}}">Volver a restaurantes</a>
+{% endblock %}
