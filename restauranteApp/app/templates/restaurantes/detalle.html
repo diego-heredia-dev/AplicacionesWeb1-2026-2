@@ -4,10 +4,10 @@
 
 {% block content %}
 <h1>{{ restaurante.nombre }}</h1>
-<a href="{{url_for('editar_restaurante', restaurante_id=restaurante.id)}}">
+<a href="{{url_for('restaurantes.editar_restaurante', restaurante_id=restaurante.id)}}">
     Editar restaurante
 </a>
-<form method="POST" action="{{url_for('eliminar_restaurante', restaurante_id=restaurante.id)}}">
+<form method="POST" action="{{url_for('restaurantes.eliminar_restaurante', restaurante_id=restaurante.id)}}">
     <button type="submit">Eliminar restaurante</button>
 </form>
 
@@ -43,7 +43,7 @@
 
 <h2>Agregar plato</h2>
 
-<form method="POST" action="{{url_for('agregar_plato', restaurante_id=restaurante.id)}}">
+<form method="POST" action="{{url_for('restaurantes.agregar_plato', restaurante_id=restaurante.id)}}">
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required>
 
@@ -58,7 +58,7 @@
     <button type="submit">Agregar plato</button>
 </form>
 
-<a href="{{ url_for('listar_restaurantes') }}">Volver a restaurantes</a>
+<a href="{{ url_for('restaurantes.listar_restaurantes') }}">Volver a restaurantes</a>
 
 {% endblock %}
 

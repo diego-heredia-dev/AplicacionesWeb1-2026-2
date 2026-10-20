@@ -5,7 +5,7 @@
 {% block content %}
 <h1>Crear restaurante</h1>
 
-<form method="POST" action="{{ url_for('crear_restaurante') }}">
+<form method="POST" action="{{ url_for('restaurantes.crear_restaurante') }}">
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre">
 
@@ -21,6 +21,6 @@
     <button type="submit">Crear restaurante</button>
 </form>
 
-<a href="{{url_for('listar_restaurantes')}}">Cancelar</a>
+<a href="{{url_for('restaurantes.listar_restaurantes')}}">Cancelar</a>
 
 {% endblock %}
