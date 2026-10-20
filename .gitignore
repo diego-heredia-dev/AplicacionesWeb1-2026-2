@@ -10,3 +10,6 @@ volume_pg_container/
 Comandos.txt
 scripts_volume
 venv
+!.env.example
+*.py[cod]
+django_app/staticfiles/
