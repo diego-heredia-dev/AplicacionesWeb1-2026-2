@@ -1,6 +1,7 @@
 # Variables de entorno y secretos
 .env
 .env.*
+.env.prod
 !.env.example
 
 # Claves privadas y certificados
