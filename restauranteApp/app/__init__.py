@@ -1,7 +1,7 @@
 from flask import Flask
 
 from .config import Config
-from .extensions import db, migrate
+from .extensions import db
 
 
 def create_app(config_class=Config):
@@ -11,7 +11,6 @@ def create_app(config_class=Config):
 
     # Inicializar las extensiones.
     db.init_app(app)
-    migrate.init_app(app, db)
 
     # Registrar los modelos en la metadata de SQLAlchemy.
     from . import models  # noqa: F401
