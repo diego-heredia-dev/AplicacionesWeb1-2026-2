@@ -4,7 +4,11 @@ set -e
 
 echo "Waiting for PostgreSQL at ${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}..."
 
-until pg_isready -h "${POSTGRES_HOST:-db}" -p "${POSTGRES_PORT:-5432}" -U "${POSTGRES_USER:-todo}"; do
+until pg_isready \
+    -h "${POSTGRES_HOST:-db}" \
+    -p "${POSTGRES_PORT:-5432}" \
+    -U "${POSTGRES_USER:?POSTGRES_USER must be set}" \
+    -d "${POSTGRES_DB:?POSTGRES_DB must be set}"; do
     sleep 1
 done
 
