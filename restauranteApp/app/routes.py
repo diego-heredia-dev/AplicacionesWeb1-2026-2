@@ -10,6 +10,7 @@ from flask import (
     url_for,
 )
 
+from .auth import requires_auth
 from .extensions import db
 from .models import Plato, Restaurante
 
@@ -62,6 +63,7 @@ def detalle_restaurante(restaurante_id):
 
 
 @bp.route("/restaurantes/crear", methods=["GET", "POST"])
+@requires_auth("write:carta")
 def crear_restaurante():
     if request.method == "GET":
         return render_template("restaurantes/crear.html")
@@ -103,6 +105,7 @@ def crear_restaurante():
     "/restaurantes/<int:restaurante_id>/editar",
     methods=["GET", "POST"],
 )
+@requires_auth("write:carta")
 def editar_restaurante(restaurante_id):
     restaurante = db.get_or_404(
         Restaurante,
@@ -159,6 +162,7 @@ def editar_restaurante(restaurante_id):
     "/restaurantes/<int:restaurante_id>/eliminar",
     methods=["POST"],
 )
+@requires_auth("delete:carta")
 def eliminar_restaurante(restaurante_id):
     restaurante = db.get_or_404(
         Restaurante,
@@ -184,6 +188,7 @@ def eliminar_restaurante(restaurante_id):
     "/restaurantes/<int:restaurante_id>/platos",
     methods=["POST"],
 )
+@requires_auth("write:carta")
 def agregar_plato(restaurante_id):
     restaurante = db.get_or_404(
         Restaurante,
