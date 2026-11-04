@@ -10,7 +10,8 @@ COPY requirements.django.txt .
 RUN pip install --no-cache-dir -r requirements.django.txt
 
 COPY django_admin/ .
+COPY gunicorn.django.conf.py .
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "--config", "gunicorn.django.conf.py", "config.wsgi:application"]
