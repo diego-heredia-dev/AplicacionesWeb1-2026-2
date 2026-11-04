@@ -24,27 +24,15 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: db
       DB_PORT: 5432
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./app/static:/app/app/static:ro
-    depends_on:
-      - flask
-      - django
 
   flask:
     build:
       context: .
       dockerfile: Dockerfile.flask
-    ports:
-      - "5000:5000"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -59,8 +47,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.django
-    ports:
-      - "8000:8000"
+    volumes:
+      - django_static:/app/static
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -72,5 +60,18 @@ services:
       migrate:
         condition: service_completed_successfully
   
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app/static:/app/app/static:ro
+      - django_static:/app/static:ro
+    depends_on:
+      - flask
+      - django
+
 volumes:
   datos_pg:
+  django_static:
