@@ -2,7 +2,6 @@ from .extensions import db
 
 class Restaurante(db.Model):
     __tablename__ = "restaurantes"
-    __table_args__ = {"schema": "content"}
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(120), nullable=False)
@@ -18,7 +17,6 @@ class Restaurante(db.Model):
 
 class Plato(db.Model):
     __tablename__ = "platos"
-    __table_args__ = {"schema": "content"}
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(120), nullable=False)
@@ -27,6 +25,6 @@ class Plato(db.Model):
 
     restaurante_id = db.Column(
         db.Integer,
-        db.ForeignKey("content.restaurantes.id", ondelete="CASCADE"),
+        db.ForeignKey("restaurantes.id", ondelete="CASCADE"),
         nullable=False
     )
