@@ -3,7 +3,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for,
 from .extensions import db
 from .models import Restaurante, Plato
 
-bp = Blueprint("todos", __name__)
+bp = Blueprint("lacarta", __name__)
 
 @bp.route("/")
 def salud():        
@@ -67,7 +67,7 @@ def crear_restaurante():
         db.session.add(restaurante)
         db.session.commit()
         flash('Restaurante creado correctamente', 'success')
-        return redirect(url_for('listar_restaurantes'))
+        return redirect(url_for('.listar_restaurantes'))
 
     except Exception:
         db.session.rollback()
@@ -107,7 +107,7 @@ def editar_restaurante(restaurante_id):
         db.session.commit()
         flash('Restaurante actualizado correctamente', 'success')
         return redirect(
-            url_for('detalle_restaurante', restaurante_id=restaurante.id)
+            url_for('.detalle_restaurante', restaurante_id=restaurante.id)
         )
 
     except Exception:
@@ -129,13 +129,13 @@ def eliminar_restaurante(restaurante_id):
         db.session.delete(restaurante)
         db.session.commit()
         flash('Restaurante eliminado correctamente', 'success')
-        return redirect(url_for('listar_restaurantes'))
+        return redirect(url_for('.listar_restaurantes'))
 
     except Exception as e:
         db.session.rollback()
         print('Error al eliminar:', e)
         flash('No se pudo eliminar el restaurante', 'error')
-        return redirect(url_for('listar_restaurantes'))
+        return redirect(url_for('.listar_restaurantes'))
 
     finally:
         db.session.close()
@@ -151,7 +151,7 @@ def agregar_plato(restaurante_id):
     if not nombre or not precio:
         flash('El nombre y el precio son obligatorios', 'error')
         return redirect(
-            url_for('detalle_restaurante', restaurante_id=restaurante.id)
+            url_for('.detalle_restaurante', restaurante_id=restaurante.id)
         )
 
     try:
@@ -163,7 +163,7 @@ def agregar_plato(restaurante_id):
     except ValueError:
         flash('El precio debe ser mayor que 0', 'error')
         return redirect(
-            url_for('detalle_restaurante', restaurante_id=restaurante.id)
+            url_for('.detalle_restaurante', restaurante_id=restaurante.id)
         )
 
     plato = Plato(
@@ -178,12 +178,12 @@ def agregar_plato(restaurante_id):
         db.session.commit()
 
         flash('Plato agregado correctamente', 'success')
-        return redirect(url_for('detalle_restaurante', restaurante_id=restaurante.id))
+        return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante.id))
 
     except Exception:
         db.session.rollback()
         flash('No se pudo agregar el plato', 'error')
-        return redirect(url_for('detalle_restaurante', restaurante_id=restaurante.id))
+        return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante.id))
 
     finally:
         db.session.close()
