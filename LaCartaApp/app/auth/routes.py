@@ -1,4 +1,5 @@
-from flask import Blueprint, redirect, url_for, session
+from flask import Blueprint, redirect, url_for, session, current_app
+from urllib.parse import urlencode
 
 from .oauth import auth0
 
@@ -19,3 +20,19 @@ def callback():
     session["access_token"] = token["access_token"]
 
     return redirect(url_for("lacarta.listar_restaurantes"))
+
+@bp.route("/logout")
+def logout():
+    session.clear()
+
+    params = {
+        "client_id": current_app.config["AUTH0_CLIENT_ID"],
+        "returnTo": url_for("lacarta.listar_restaurantes", _external=True)
+    }
+
+    logout_url = (
+        f"https://{current_app.config['AUTH0_DOMAIN']}/v2/logout?"
+        f"{urlencode(params)}"
+    )
+
+    return redirect(logout_url)
