@@ -13,7 +13,9 @@ def create_app(config_class=Config):
 
     from . import models
     from .routes import bp as lacarta_bp
+    from .auth.routes import bp as auth_bp
 
     app.register_blueprint(lacarta_bp)
+    app.register_blueprint(auth_bp)
     
     return app
