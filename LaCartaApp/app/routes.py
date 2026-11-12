@@ -200,12 +200,7 @@ def agregar_plato(restaurante_id):
 )
 @requires_auth("create:pedidos")
 def crear_pedido(restaurante_id):
-    usuario = session.get("user")
-
-    if not usuario or not usuario.get("sub"):
-        abort(401)
-
-    cliente_id = usuario["sub"]
+    cliente_id = session["user"]["sub"]
 
     restaurante = db.get_or_404(Restaurante, restaurante_id)
 
@@ -290,6 +285,22 @@ def crear_pedido(restaurante_id):
 
     return redirect(
         url_for(".detalle_restaurante", restaurante_id=restaurante.id)
+    )
+
+@bp.route("/pedidos")
+@requires_auth("read:mis-pedidos")
+def mis_pedidos():
+    cliente_id = session["user"]["sub"]
+
+    pedidos = Pedido.query.filter_by(
+        cliente=cliente_id
+    ).order_by(
+        Pedido.fecha.desc()
+    ).all()
+
+    return render_template(
+        "pedidos/index.html",
+        pedidos=pedidos
     )
 
 @bp.errorhandler(404)

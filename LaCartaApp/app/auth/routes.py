@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, session, current_app
+from flask import Blueprint, redirect, url_for, session, current_app, abort
 from urllib.parse import urlencode
 
 from .oauth import auth0
