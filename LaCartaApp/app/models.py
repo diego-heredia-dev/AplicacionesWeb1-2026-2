@@ -1,4 +1,5 @@
 from .extensions import db
+from datetime import datetime, timezone
 
 class Restaurante(db.Model):
     __tablename__ = "restaurantes"
@@ -28,3 +29,25 @@ class Plato(db.Model):
         db.ForeignKey("restaurantes.id", ondelete="CASCADE"),
         nullable=False
     )
+
+class Pedido(db.Model):
+    __tablename__ = "pedidos"
+
+    id = db.Column(db.Integer, primary_key=True)
+    cliente = db.Column(db.String(120), nullable=False)
+    restaurante_id = db.Column(db.Integer, db.ForeignKey("restaurantes.id"), nullable=False)
+    estado = db.Column(db.String(20), nullable=False, default="pendiente")
+    fecha = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+    total = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    restaurante = db.relationship("Restaurante", backref="pedidos")
+    items = db.relationship("ItemPedido", backref="pedido", cascade="all, delete-orphan")
+
+class ItemPedido(db.Model):
+    __tablename__ = "items_pedido"
+
+    id = db.Column(db.Integer, primary_key=True)
+    pedido_id = db.Column(db.Integer, db.ForeignKey("pedidos.id"), nullable=False)
+    plato_id = db.Column(db.Integer, db.ForeignKey("platos.id"), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False, default=1)
+    precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
+    plato = db.relationship("Plato", backref="items_pedido")
