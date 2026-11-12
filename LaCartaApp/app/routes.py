@@ -303,6 +303,31 @@ def mis_pedidos():
         pedidos=pedidos
     )
 
+@bp.route("/pedidos/<int:pedido_id>/cancelar", methods=["POST"])
+@requires_auth("read:mis-pedidos")
+def cancelar_pedido(pedido_id):
+    cliente_id = session["user"]["sub"]
+
+    pedido = Pedido.query.filter_by(
+        id=pedido_id,
+        cliente=cliente_id
+    ).first_or_404()
+
+    try:
+        pedido.estado = "cancelado"
+        db.session.commit()
+
+        flash("Pedido cancelado correctamente.", "success")
+
+    except Exception:
+        db.session.rollback()
+
+        flash("No se pudo cancelar el pedido.", "error")
+
+    return redirect(url_for(".mis_pedidos"))
+
+
+
 @bp.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404
