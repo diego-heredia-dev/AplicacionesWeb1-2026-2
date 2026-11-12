@@ -23,6 +23,10 @@
             </ul>
 
             <p><strong>Total:</strong> Bs. {{ pedido.total }}</p>
+
+            <form method="POST" action="{{ url_for('lacarta.avanzar_pedido', pedido_id=pedido.id) }}">
+                <button type="submit">Avanzar estado</button>
+            </form>
         </section>
 
         <hr>

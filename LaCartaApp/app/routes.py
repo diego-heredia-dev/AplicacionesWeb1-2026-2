@@ -346,6 +346,36 @@ def cola_cocina():
         pedidos=pedidos
     )
 
+@bp.route("/cocina/pedidos/<int:pedido_id>/avanzar", methods=["POST"])
+@requires_auth("update:pedidos")
+def avanzar_pedido(pedido_id):
+    pedido = db.get_or_404(Pedido, pedido_id)
+
+    transiciones = {
+        "pendiente": "en_preparacion",
+        "en_preparacion": "listo",
+        "listo": "entregado"
+    }
+
+    siguiente_estado = transiciones.get(pedido.estado)
+
+    if not siguiente_estado:
+        flash("Este pedido ya no puede avanzar de estado.", "error")
+        return redirect(url_for(".cola_cocina"))
+
+    try:
+        pedido.estado = siguiente_estado
+        db.session.commit()
+
+        flash(
+            f"El pedido #{pedido.id} ahora está: {siguiente_estado}.", "success")
+
+    except Exception:
+        db.session.rollback()
+        flash("No se pudo actualizar el estado del pedido.", "error")
+
+    return redirect(url_for(".cola_cocina"))
+
 @bp.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404
