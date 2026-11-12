@@ -11,12 +11,17 @@ def login():
 
     return auth0().authorize_redirect(redirect_uri)
 
-
 @bp.route("/callback")
 def callback():
     token = auth0().authorize_access_token()
 
-    session["user"] = token.get("userinfo")
+    userinfo = token.get("userinfo")
+
+    if not userinfo or not userinfo.get("sub"):
+        session.clear()
+        abort(401)
+
+    session["user"] = userinfo
     session["access_token"] = token["access_token"]
 
     return redirect(url_for("lacarta.listar_restaurantes"))
