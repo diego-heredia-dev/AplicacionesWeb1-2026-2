@@ -326,7 +326,25 @@ def cancelar_pedido(pedido_id):
 
     return redirect(url_for(".mis_pedidos"))
 
+@bp.route("/cocina")
+@requires_auth("read:pedidos")
+def cola_cocina():
+    estados_activos = [
+        "pendiente",
+        "en_preparacion",
+        "listo"
+    ]
 
+    pedidos = Pedido.query.filter(
+        Pedido.estado.in_(estados_activos)
+    ).order_by(
+        Pedido.fecha.asc()
+    ).all()
+
+    return render_template(
+        "cocina/index.html",
+        pedidos=pedidos
+    )
 
 @bp.errorhandler(404)
 def pagina_no_encontrada(error):
