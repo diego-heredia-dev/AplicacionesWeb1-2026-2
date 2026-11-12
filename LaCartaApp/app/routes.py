@@ -1,8 +1,9 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for,  jsonify
+from flask import Blueprint, flash, redirect, render_template, request, url_for, jsonify, session, abort
 
 from .extensions import db
-from .models import Restaurante, Plato
+from .models import Restaurante, Plato, Pedido, ItemPedido
 from .auth.decorators import requires_auth
+from decimal import Decimal, InvalidOperation
 
 bp = Blueprint("lacarta", __name__)
 
@@ -193,6 +194,103 @@ def agregar_plato(restaurante_id):
     finally:
         db.session.close()
 
+@bp.route(
+    "/restaurantes/<int:restaurante_id>/pedidos",
+    methods=["POST"]
+)
+@requires_auth("create:pedidos")
+def crear_pedido(restaurante_id):
+    usuario = session.get("user")
+
+    if not usuario or not usuario.get("sub"):
+        abort(401)
+
+    cliente_id = usuario["sub"]
+
+    restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+    items_pedido = []
+    total = Decimal("0.00")
+
+    try:
+        for key, value in request.form.items():
+            if not key.startswith("plato_"):
+                continue
+
+            plato_id = int(key.replace("plato_", ""))
+            cantidad = int(value)
+
+            if cantidad < 0:
+                raise ValueError
+
+            if cantidad == 0:
+                continue
+
+            plato = Plato.query.filter_by(
+                id=plato_id,
+                restaurante_id=restaurante.id,
+                disponible=True
+            ).first()
+
+            if not plato:
+                raise ValueError
+
+            subtotal = plato.precio * cantidad
+            total += subtotal
+
+            items_pedido.append({
+                "plato": plato,
+                "cantidad": cantidad,
+                "precio": plato.precio
+            })
+
+        if not items_pedido:
+            raise ValueError
+
+    except (ValueError, InvalidOperation):
+        flash("El pedido contiene datos inválidos.", "error")
+        return redirect(
+            url_for(
+                ".detalle_restaurante",
+                restaurante_id=restaurante.id
+            )
+        )
+
+    pedido = Pedido(
+        cliente=cliente_id,
+        restaurante_id=restaurante.id,
+        estado="pendiente",
+        total=total
+    )
+
+    try:
+        db.session.add(pedido)
+        db.session.flush()
+
+        for item in items_pedido:
+            nuevo_item = ItemPedido(
+                pedido_id=pedido.id,
+                plato_id=item["plato"].id,
+                cantidad=item["cantidad"],
+                precio_unitario=item["precio"]
+            )
+
+            db.session.add(nuevo_item)
+
+        db.session.commit()
+
+        flash("¡Pedido realizado correctamente!", "success")
+
+    except Exception:
+        db.session.rollback()
+        flash("No se pudo registrar el pedido.", "error")
+
+    finally:
+        db.session.close()
+
+    return redirect(
+        url_for(".detalle_restaurante", restaurante_id=restaurante.id)
+    )
 
 @bp.errorhandler(404)
 def pagina_no_encontrada(error):

@@ -41,6 +41,29 @@
 <p>No hay platos disponibles</p>
 {% endif %}
 
+<h2>Realizar pedido</h2>
+
+<form method="POST" action="{{ url_for('lacarta.crear_pedido', restaurante_id=restaurante.id) }}">
+    {% for plato in restaurante.platos %}
+        {% if plato.disponible %}
+            <div>
+                <label>
+                    {{ plato.nombre }} - Bs {{ plato.precio }}
+
+                    <input
+                        type="number"
+                        name="plato_{{ plato.id }}"
+                        min="0"
+                        value="0"
+                    >
+                </label>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <button type="submit">Confirmar pedido</button>
+</form>
+
 <h2>Agregar plato</h2>
 
 <form method="POST" action="{{url_for('lacarta.agregar_plato', restaurante_id=restaurante.id)}}">
