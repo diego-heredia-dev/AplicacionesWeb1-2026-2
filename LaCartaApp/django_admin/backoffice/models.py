@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 class Restaurante(models.Model):
     nombre = models.CharField(max_length=120)
@@ -61,6 +62,22 @@ class Pedido(models.Model):
     class Meta:
         db_table = "pedidos"
         ordering = ["-fecha"]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(estado__in=[
+                    "pendiente",
+                    "en_preparacion",
+                    "listo",
+                    "entregado",
+                    "cancelado",
+                ]),
+                name="pedido_estado_valido",
+            ),
+            models.CheckConstraint(
+                condition=Q(total__gte=0),
+                name="pedido_total_no_negativo",
+            ),
+        ]
 
     def __str__(self):
         return f"Pedido #{self.pk} - {self.cliente}"
@@ -85,6 +102,16 @@ class ItemPedido(models.Model):
 
     class Meta:
         db_table = "items_pedido"
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(cantidad__gt=0),
+                name="item_cantidad_mayor_cero",
+            ),
+            models.CheckConstraint(
+                condition=Q(precio_unitario__gte=0),
+                name="item_precio_no_negativo",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.plato} x {self.cantidad}"
