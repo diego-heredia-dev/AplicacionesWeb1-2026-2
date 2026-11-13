@@ -363,6 +363,10 @@ def cancelar_pedido(pedido_id):
         cliente=cliente_id
     ).first_or_404()
 
+    if pedido.estado != "pendiente":
+        flash("Solo puedes cancelar pedidos pendientes.", "error")
+        return redirect(url_for(".mis_pedidos"))
+
     try:
         pedido.estado = "cancelado"
         db.session.commit()
