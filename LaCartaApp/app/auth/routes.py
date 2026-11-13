@@ -9,7 +9,7 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 def login():
     redirect_uri = url_for("auth.callback", _external=True)
 
-    return auth0().authorize_redirect(redirect_uri)
+    return auth0().authorize_redirect(redirect_uri, audience=current_app.config["AUTH0_AUDIENCE"])
 
 @bp.route("/callback")
 def callback():
