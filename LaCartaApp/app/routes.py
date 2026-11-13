@@ -268,7 +268,7 @@ def crear_pedido(restaurante_id):
             plato_id = int(key.replace("plato_", ""))
             cantidad = int(value)
 
-            if cantidad < 0:
+            if cantidad < 0 or cantidad > 20:
                 raise ValueError
 
             if cantidad == 0:
