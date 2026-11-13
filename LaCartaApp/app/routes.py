@@ -77,8 +77,6 @@ def crear_restaurante():
         flash('No se pudo crear el restaurante', 'error')
         return render_template('restaurantes/crear.html')
     
-    finally:
-        db.session.close()
 
 @bp.route('/restaurantes/<int:restaurante_id>/editar', methods=['GET', 'POST'])
 @requires_auth("write:carta")
@@ -122,9 +120,6 @@ def editar_restaurante(restaurante_id):
             restaurante=restaurante
         )
 
-    finally:
-        db.session.close()
-
 @bp.route('/restaurantes/<int:restaurante_id>/eliminar', methods=['POST'])
 @requires_auth("delete:carta")
 def eliminar_restaurante(restaurante_id):
@@ -141,9 +136,6 @@ def eliminar_restaurante(restaurante_id):
         print('Error al eliminar:', e)
         flash('No se pudo eliminar el restaurante', 'error')
         return redirect(url_for('.listar_restaurantes'))
-
-    finally:
-        db.session.close()
 
 @bp.route('/restaurantes/<int:restaurante_id>/platos', methods=['POST'])
 @requires_auth("write:carta")
@@ -191,8 +183,6 @@ def agregar_plato(restaurante_id):
         flash('No se pudo agregar el plato', 'error')
         return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante.id))
 
-    finally:
-        db.session.close()
 
 @bp.route(
     "/restaurantes/<int:restaurante_id>/pedidos",
