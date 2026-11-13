@@ -30,15 +30,27 @@
                 <strong>{{ plato.nombre }}</strong> - Bs {{ plato.precio }}
 
                 {% if plato.disponible %}
-                - Disponible
+                    - Disponible
                 {% else %}
-                - No disponible
-                {% endif%}
+                    - No disponible
+                {% endif %}
+
+                <a href="{{ url_for('lacarta.editar_plato', plato_id=plato.id) }}">
+                    Editar
+                </a>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('lacarta.eliminar_plato', plato_id=plato.id) }}"
+                    style="display: inline;"
+                >
+                    <button type="submit">Eliminar</button>
+                </form>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-<p>No hay platos disponibles</p>
+    <p>No hay platos disponibles</p>
 {% endif %}
 
 <h2>Realizar pedido</h2>

@@ -184,6 +184,49 @@ def agregar_plato(restaurante_id):
         return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante.id))
 
 
+@bp.route('/platos/<int:plato_id>/editar', methods=['GET', 'POST'])
+@requires_auth("write:carta")
+def editar_plato(plato_id):
+    plato = db.get_or_404(Plato, plato_id)
+
+    if request.method == 'POST':
+        nombre = request.form.get('nombre', '').strip()
+        precio = request.form.get('precio', '').strip()
+        disponible = request.form.get('disponible') == 'on'
+
+        if not nombre or not precio:
+            flash('El nombre y el precio son obligatorios', 'error')
+            return redirect(url_for('.editar_plato', plato_id=plato.id))
+
+        try:
+            precio = float(precio)
+
+            if precio <= 0:
+                raise ValueError
+
+        except ValueError:
+            flash('El precio debe ser mayor que 0', 'error')
+            return redirect(url_for('.editar_plato', plato_id=plato.id))
+
+        try:
+            plato.nombre = nombre
+            plato.precio = precio
+            plato.disponible = disponible
+
+            db.session.commit()
+
+            flash('Plato actualizado correctamente', 'success')
+            return redirect(
+                url_for('.detalle_restaurante', restaurante_id=plato.restaurante_id)
+            )
+
+        except Exception:
+            db.session.rollback()
+            flash('No se pudo actualizar el plato', 'error')
+
+    return render_template('platos/editar.html', plato=plato)
+
+
 @bp.route(
     "/restaurantes/<int:restaurante_id>/pedidos",
     methods=["POST"]
