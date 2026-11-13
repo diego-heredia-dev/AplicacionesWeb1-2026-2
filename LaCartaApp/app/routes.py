@@ -227,6 +227,28 @@ def editar_plato(plato_id):
     return render_template('platos/editar.html', plato=plato)
 
 
+@bp.route('/platos/<int:plato_id>/eliminar', methods=['POST'])
+@requires_auth("delete:carta")
+def eliminar_plato(plato_id):
+    plato = db.get_or_404(Plato, plato_id)
+
+    restaurante_id = plato.restaurante_id
+
+    try:
+        db.session.delete(plato)
+        db.session.commit()
+
+        flash('Plato eliminado correctamente', 'success')
+
+    except Exception:
+        db.session.rollback()
+        flash('No se pudo eliminar el plato', 'error')
+
+    return redirect(
+        url_for('.detalle_restaurante', restaurante_id=restaurante_id)
+    )
+
+
 @bp.route("/restaurantes/<int:restaurante_id>/pedidos", methods=["POST"])
 @requires_auth("create:pedidos")
 def crear_pedido(restaurante_id):
