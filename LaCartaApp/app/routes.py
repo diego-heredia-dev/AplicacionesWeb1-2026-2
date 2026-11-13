@@ -203,6 +203,7 @@ def crear_pedido(restaurante_id):
     cliente_id = session["user"]["sub"]
 
     restaurante = db.get_or_404(Restaurante, restaurante_id)
+    restaurante_id = restaurante.id
 
     items_pedido = []
     total = Decimal("0.00")
@@ -280,11 +281,8 @@ def crear_pedido(restaurante_id):
         db.session.rollback()
         flash("No se pudo registrar el pedido.", "error")
 
-    finally:
-        db.session.close()
-
     return redirect(
-        url_for(".detalle_restaurante", restaurante_id=restaurante.id)
+        url_for(".detalle_restaurante", restaurante_id=restaurante_id)
     )
 
 @bp.route("/pedidos")
