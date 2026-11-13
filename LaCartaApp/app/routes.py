@@ -227,10 +227,7 @@ def editar_plato(plato_id):
     return render_template('platos/editar.html', plato=plato)
 
 
-@bp.route(
-    "/restaurantes/<int:restaurante_id>/pedidos",
-    methods=["POST"]
-)
+@bp.route("/restaurantes/<int:restaurante_id>/pedidos", methods=["POST"])
 @requires_auth("create:pedidos")
 def crear_pedido(restaurante_id):
     cliente_id = session["user"]["sub"]

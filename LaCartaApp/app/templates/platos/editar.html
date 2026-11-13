@@ -6,8 +6,7 @@
 
 <h1>Editar plato</h1>
 
-<form method="POST">
-
+<form method="POST" action="{{ url_for('lacarta.editar_plato', plato_id=plato.id) }}">
     <label for="nombre">Nombre:</label>
     <input
         type="text"
@@ -38,11 +37,8 @@
     </label>
 
     <button type="submit">Guardar cambios</button>
-
 </form>
 
-<a href="{{ url_for('lacarta.detalle_restaurante', restaurante_id=plato.restaurante_id) }}">
-    Cancelar
-</a>
+<a href="{{ url_for('lacarta.detalle_restaurante', restaurante_id=plato.restaurante_id) }}">Cancelar</a>
 
 {% endblock %}

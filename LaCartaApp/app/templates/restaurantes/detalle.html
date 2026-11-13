@@ -35,17 +35,7 @@
                     - No disponible
                 {% endif %}
 
-                <a href="{{ url_for('lacarta.editar_plato', plato_id=plato.id) }}">
-                    Editar
-                </a>
-
-                <form
-                    method="POST"
-                    action="{{ url_for('lacarta.eliminar_plato', plato_id=plato.id) }}"
-                    style="display: inline;"
-                >
-                    <button type="submit">Eliminar</button>
-                </form>
+                <a href="{{ url_for('lacarta.editar_plato', plato_id=plato.id) }}">Editar</a>
             </li>
         {% endfor %}
     </ul>
