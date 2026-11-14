@@ -63,39 +63,37 @@
 
 <hr>
 
-<h2>Empleados</h2>
+{% if has_permission("write:carta") %}
 
-{% if restaurante.empleados %}
-    <ul>
-        {% for empleado in restaurante.empleados %}
-            <li>
-                <strong>{{ empleado.nombre }}</strong>
-                - {{ empleado.cargo }}
+    <h2>Empleados</h2>
 
-                {% if has_permission("write:carta") %}
+    {% if restaurante.empleados %}
+        <ul>
+            {% for empleado in restaurante.empleados %}
+                <li>
+                    <strong>{{ empleado.nombre }}</strong>
+                    - {{ empleado.cargo }}
+
                     <a href="{{ url_for('lacarta.editar_empleado', empleado_id=empleado.id) }}">
                         Editar
                     </a>
-                {% endif %}
 
-                {% if has_permission("delete:carta") %}
-                    <form
-                        method="POST"
-                        action="{{ url_for('lacarta.eliminar_empleado', empleado_id=empleado.id) }}"
-                        style="display: inline;"
-                    >
-                        <button type="submit">Eliminar</button>
-                    </form>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Este restaurante todavía no tiene empleados.</p>
-{% endif %}
+                    {% if has_permission("delete:carta") %}
+                        <form
+                            method="POST"
+                            action="{{ url_for('lacarta.eliminar_empleado', empleado_id=empleado.id) }}"
+                            style="display: inline;"
+                        >
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Este restaurante todavía no tiene empleados.</p>
+    {% endif %}
 
-
-{% if has_permission("write:carta") %}
     <h3>Agregar empleado</h3>
 
     <form
@@ -122,7 +120,9 @@
 
         <button type="submit">Registrar empleado</button>
     </form>
+
 {% endif %}
+
 
 {% if has_permission("create:pedidos") %}
     <h2>Realizar pedido</h2>
