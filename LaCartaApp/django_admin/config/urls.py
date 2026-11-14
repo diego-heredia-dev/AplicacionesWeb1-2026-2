@@ -26,6 +26,6 @@ urlpatterns = [
 
     # Interceptamos el login predeterminado de Django.
     path("admin/login/", auth_views.auth0_login),
-
+    path("admin/logout/", auth_views.auth0_logout),
     path("admin/", admin.site.urls),
 ]

@@ -5,6 +5,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlencode
 
 from .auth0 import oauth
 
@@ -63,4 +64,15 @@ def auth0_callback(request):
 
 def auth0_logout(request):
     logout(request)
-    return redirect("auth0_login")
+
+    params = {
+        "client_id": settings.AUTH0_CLIENT_ID,
+        "returnTo": "https://admin.django.twilightparadox.com/",
+    }
+
+    logout_url = (
+        f"https://{settings.AUTH0_DOMAIN}/v2/logout?"
+        f"{urlencode(params)}"
+    )
+
+    return redirect(logout_url)
