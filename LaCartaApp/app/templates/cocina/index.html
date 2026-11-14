@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Cola de cocina</h1>
+
+{% if pedidos %}
+    {% for pedido in pedidos %}
+        <section>
+            <h2>Pedido #{{ pedido.id }}</h2>
+
+            <p><strong>Restaurante:</strong> {{ pedido.restaurante.nombre }}</p>
+            <p><strong>Fecha:</strong> {{ pedido.fecha.strftime("%d/%m/%Y %H:%M") }}</p>
+            <p><strong>Estado:</strong> {{ pedido.estado }}</p>
+
+            <h3>Productos</h3>
+            <ul>
+                {% for item in pedido.items %}
+                    <li>
+                        {{ item.plato.nombre }}
+                        — Cantidad: {{ item.cantidad }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <p><strong>Total:</strong> Bs. {{ pedido.total }}</p>
+
+            {% if has_permission("update:pedidos") and pedido.estado in ["pendiente", "en_preparacion", "listo"] %}
+                <form method="POST" action="{{ url_for('lacarta.avanzar_pedido', pedido_id=pedido.id) }}">
+                    <button type="submit">Avanzar estado</button>
+                </form>
+            {% endif %}
+        </section>
+
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>No hay pedidos activos en este momento.</p>
+{% endif %}
+
+<a href="{{ url_for('lacarta.listar_restaurantes') }}">Volver a restaurantes</a>
+{% endblock %}

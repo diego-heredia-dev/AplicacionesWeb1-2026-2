@@ -8,4 +8,5 @@ __pycache__/
 volume_pg_container/
 Comandos.txt
 scripts_volume
-venv
+venv*/
+.venv*/

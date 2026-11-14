@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} La Carta {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('lacarta.listar_restaurantes') }}">Restaurantes</a>
+
+        {% if has_permission("read:mis-pedidos") %}
+            <a href="{{ url_for('lacarta.mis_pedidos') }}">Mis pedidos</a>
+        {% endif %}
+
+        {% if has_permission("read:pedidos") %}
+            <a href="{{ url_for('lacarta.cola_cocina') }}">Cocina</a>
+        {% endif %}
+
+        {% if has_permission("write:carta") %}
+            <a href="{{ url_for('lacarta.listar_empleados') }}">Empleados</a>
+        {% endif %}
+
+        {% if session.get("access_token") %}
+            <span>
+                Hola, {{ session.get("user", {}).get("email", "Usuario") }}
+            </span>
+            <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
+        {% endif %}
+    </nav>
+
+    <main>
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    <div class="flash {{ categoria }}">
+                        {{ mensaje }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

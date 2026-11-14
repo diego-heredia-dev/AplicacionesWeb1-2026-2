@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}Mis pedidos - La Carta{% endblock %}
+
+{% block content %}
+
+<h1>Mis pedidos</h1>
+
+{% if pedidos %}
+    {% for pedido in pedidos %}
+        <article>
+            <h2>Pedido #{{ pedido.id }}</h2>
+
+            <p><strong>Restaurante:</strong> {{ pedido.restaurante.nombre }}</p>
+            <p><strong>Fecha:</strong> {{ pedido.fecha }}</p>
+            <p><strong>Estado:</strong> {{ pedido.estado }}</p>
+            <p><strong>Total:</strong> Bs {{ pedido.total }}</p>
+
+            {% if has_permission("read:mis-pedidos") and pedido.estado == 'pendiente' %}
+                <form method="POST" action="{{ url_for('lacarta.cancelar_pedido', pedido_id=pedido.id) }}">
+                    <button type="submit">Cancelar pedido</button>
+                </form>
+            {% endif %}
+
+            <h3>Productos</h3>
+
+            <ul>
+                {% for item in pedido.items %}
+                    <li>
+                        {{ item.plato.nombre }}
+                        x {{ item.cantidad }}
+                        Precio Unitario - {{ item.precio_unitario }} Bs 
+                    </li>
+                {% endfor %}
+            </ul>
+        </article>
+
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>Todavía no tienes pedidos registrados.</p>
+{% endif %}
+
+<a href="{{ url_for('lacarta.listar_restaurantes') }}">
+    Volver a restaurantes
+</a>
+
+{% endblock %}

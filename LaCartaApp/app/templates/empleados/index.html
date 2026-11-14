@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block title %}Empleados - La Carta{% endblock %}
+
+{% block content %}
+
+<h1>Empleados</h1>
+
+<a href="{{ url_for('lacarta.listar_empleados') }}">Actualizar</a>
+
+{% if empleados %}
+    <ul>
+        {% for empleado in empleados %}
+            <li>
+                <strong>{{ empleado.nombre }}</strong>
+                - {{ empleado.cargo }}
+                - Restaurante: {{ empleado.restaurante.nombre }}
+
+                <a href="{{ url_for('lacarta.editar_empleado', empleado_id=empleado.id) }}">
+                    Editar
+                </a>
+
+                {% if has_permission("delete:carta") %}
+                    <form
+                        method="POST"
+                        action="{{ url_for('lacarta.eliminar_empleado', empleado_id=empleado.id) }}"
+                        style="display: inline;"
+                    >
+                        <button type="submit">Eliminar</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay empleados registrados.</p>
+{% endif %}
+
+<a href="{{ url_for('lacarta.listar_restaurantes') }}">Volver a restaurantes</a>
+
+{% endblock %}

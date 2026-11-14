@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block title %}Editar empleado - La Carta{% endblock %}
+
+{% block content %}
+
+<h1>Editar empleado</h1>
+
+<form method="POST">
+
+    <label for="nombre">Nombre:</label>
+    <input
+        type="text"
+        id="nombre"
+        name="nombre"
+        value="{{ empleado.nombre }}"
+        maxlength="120"
+        required
+    >
+
+    <label for="cargo">Cargo:</label>
+    <input
+        type="text"
+        id="cargo"
+        name="cargo"
+        value="{{ empleado.cargo }}"
+        maxlength="80"
+        required
+    >
+
+    <label for="restaurante_id">Restaurante:</label>
+    <select id="restaurante_id" name="restaurante_id" required>
+        {% for restaurante in restaurantes %}
+            <option
+                value="{{ restaurante.id }}"
+                {% if restaurante.id == empleado.restaurante_id %}selected{% endif %}
+            >
+                {{ restaurante.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Guardar cambios</button>
+
+</form>
+
+<a href="{{ url_for('lacarta.listar_empleados') }}">Cancelar</a>
+
+{% endblock %}
