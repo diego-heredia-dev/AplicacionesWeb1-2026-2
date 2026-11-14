@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for, jsonify, session, abort
 
 from .extensions import db
-from .models import Restaurante, Plato, Pedido, ItemPedido
+from .models import Restaurante, Plato, Pedido, ItemPedido, Empleado
 from .auth.decorators import requires_auth
 from decimal import Decimal, InvalidOperation
 
@@ -429,6 +429,107 @@ def avanzar_pedido(pedido_id):
         flash("No se pudo actualizar el estado del pedido.", "error")
 
     return redirect(url_for(".cola_cocina"))
+
+
+@bp.route('/empleados')
+@requires_auth("write:carta")
+def listar_empleados():
+    empleados = Empleado.query.order_by(Empleado.nombre).all()
+
+    return render_template(
+        'empleados/index.html',
+        empleados=empleados
+    )
+
+@bp.route('/restaurantes/<int:restaurante_id>/empleados', methods=['POST'])
+@requires_auth("write:carta")
+def agregar_empleado(restaurante_id):
+    restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+    nombre = request.form.get('nombre', '').strip()
+    cargo = request.form.get('cargo', '').strip()
+
+    if not nombre or not cargo:
+        flash("Todos los campos son obligatorios.", "error")
+        return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante_id))
+
+    empleado = Empleado(
+        nombre=nombre,
+        cargo=cargo,
+        restaurante_id=restaurante.id
+    )
+
+    try:
+        db.session.add(empleado)
+        db.session.commit()
+        flash("Empleado registrado correctamente.", "success")
+    except Exception:
+        db.session.rollback()
+        flash("Error al registrar el empleado.", "error")
+
+    return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante_id))
+
+
+@bp.route('/empleados/<int:empleado_id>/editar', methods=['GET', 'POST'])
+@requires_auth("write:carta")
+def editar_empleado(empleado_id):
+    empleado = db.get_or_404(Empleado, empleado_id)
+    restaurantes = Restaurante.query.order_by(Restaurante.nombre).all()
+
+    if request.method == 'POST':
+        nombre = request.form.get('nombre', '').strip()
+        cargo = request.form.get('cargo', '').strip()
+        restaurante_id = request.form.get('restaurante_id', '')
+
+        if not nombre or not cargo or not restaurante_id:
+            flash("Todos los campos son obligatorios.", "error")
+            return render_template(
+                'empleados/editar.html',
+                empleado=empleado,
+                restaurantes=restaurantes
+            )
+
+        try:
+            restaurante_id = int(restaurante_id)
+            restaurante = db.get_or_404(Restaurante, restaurante_id)
+
+            empleado.nombre = nombre
+            empleado.cargo = cargo
+            empleado.restaurante_id = restaurante.id
+
+            db.session.commit()
+            flash("Empleado actualizado correctamente.", "success")
+
+            return redirect(url_for('.listar_empleados'))
+
+        except (ValueError, TypeError):
+            db.session.rollback()
+            flash("Restaurante no válido.", "error")
+        except Exception:
+            db.session.rollback()
+            flash("Error al actualizar el empleado.", "error")
+
+    return render_template(
+        'empleados/editar.html',
+        empleado=empleado,
+        restaurantes=restaurantes
+    )
+
+@bp.route('/empleados/<int:empleado_id>/eliminar', methods=['POST'])
+@requires_auth("delete:carta")
+def eliminar_empleado(empleado_id):
+    empleado = db.get_or_404(Empleado, empleado_id)
+    restaurante_id = empleado.restaurante_id
+
+    try:
+        db.session.delete(empleado)
+        db.session.commit()
+        flash("Empleado eliminado correctamente.", "success")
+    except Exception:
+        db.session.rollback()
+        flash("Error al eliminar el empleado.", "error")
+
+    return redirect(url_for('.detalle_restaurante', restaurante_id=restaurante_id))
 
 @bp.errorhandler(404)
 def pagina_no_encontrada(error):
