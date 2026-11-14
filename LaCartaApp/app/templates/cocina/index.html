@@ -24,9 +24,11 @@
 
             <p><strong>Total:</strong> Bs. {{ pedido.total }}</p>
 
-            <form method="POST" action="{{ url_for('lacarta.avanzar_pedido', pedido_id=pedido.id) }}">
-                <button type="submit">Avanzar estado</button>
-            </form>
+            {% if has_permission("update:pedidos") and pedido.estado in ["pendiente", "en_preparacion", "listo"] %}
+                <form method="POST" action="{{ url_for('lacarta.avanzar_pedido', pedido_id=pedido.id) }}">
+                    <button type="submit">Avanzar estado</button>
+                </form>
+            {% endif %}
         </section>
 
         <hr>

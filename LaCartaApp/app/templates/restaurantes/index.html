@@ -6,7 +6,9 @@
 
 <h1>Restaurantes</h1>
 
-<a href="{{ url_for('lacarta.crear_restaurante') }}">Crear restaurante</a>
+{% if has_permission("write:carta") %}
+    <a href="{{ url_for('lacarta.crear_restaurante') }}">Crear restaurante</a>
+{% endif %}
 
 <a href="{{ url_for('lacarta.listar_restaurantes') }}">Actualizar</a>
 

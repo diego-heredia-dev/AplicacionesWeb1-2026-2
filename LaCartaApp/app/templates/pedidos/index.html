@@ -16,11 +16,8 @@
             <p><strong>Estado:</strong> {{ pedido.estado }}</p>
             <p><strong>Total:</strong> Bs {{ pedido.total }}</p>
 
-            {% if pedido.estado == 'pendiente' %}
-                <form
-                    method="POST"
-                    action="{{ url_for('lacarta.cancelar_pedido', pedido_id=pedido.id) }}"
-                >
+            {% if has_permission("read:mis-pedidos") and pedido.estado == 'pendiente' %}
+                <form method="POST" action="{{ url_for('lacarta.cancelar_pedido', pedido_id=pedido.id) }}">
                     <button type="submit">Cancelar pedido</button>
                 </form>
             {% endif %}
