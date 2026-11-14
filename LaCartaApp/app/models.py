@@ -16,6 +16,12 @@ class Restaurante(db.Model):
         cascade="all, delete-orphan"
     )
 
+    empleados = db.relationship(
+        "Empleado",
+        backref="restaurante",
+        cascade="all, delete-orphan"
+    )
+
 class Plato(db.Model):
     __tablename__ = "platos"
 
@@ -51,3 +57,16 @@ class ItemPedido(db.Model):
     cantidad = db.Column(db.Integer, nullable=False, default=1)
     precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
     plato = db.relationship("Plato", backref="items_pedido")
+
+class Empleado(db.Model):
+    __tablename__ = "empleados"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(120), nullable=False)
+    cargo = db.Column(db.String(80), nullable=False)
+
+    restaurante_id = db.Column(
+        db.Integer,
+        db.ForeignKey("restaurantes.id", ondelete="CASCADE"),
+        nullable=False
+    )

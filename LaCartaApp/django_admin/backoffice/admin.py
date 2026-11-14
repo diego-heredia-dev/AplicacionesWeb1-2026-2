@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Pedido, ItemPedido
-
+from .models import Pedido, ItemPedido, Empleado
 
 class ItemPedidoInline(admin.TabularInline):
     model = ItemPedido
@@ -29,3 +28,10 @@ class PedidoAdmin(admin.ModelAdmin):
     readonly_fields = ("fecha", "total")
 
     inlines = [ItemPedidoInline]
+
+
+@admin.register(Empleado)
+class EmpleadoAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre", "cargo", "restaurante")
+    list_filter = ("restaurante", "cargo")
+    search_fields = ("nombre", "cargo")
