@@ -17,6 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from backoffice import auth_views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("auth/login/", auth_views.auth0_login, name="auth0_login"),
+    path("auth/callback/", auth_views.auth0_callback, name="auth0_callback"),
+    path("auth/logout/", auth_views.auth0_logout, name="auth0_logout"),
+
+    # Interceptamos el login predeterminado de Django.
+    path("admin/login/", auth_views.auth0_login),
+
+    path("admin/", admin.site.urls),
 ]
