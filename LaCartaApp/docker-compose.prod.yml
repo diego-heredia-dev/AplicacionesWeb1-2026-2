@@ -58,6 +58,9 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_DEBUG: ${DJANGO_DEBUG}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS}
     depends_on:
       migrate:
         condition: service_completed_successfully
