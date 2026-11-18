@@ -1,9 +1,10 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for, jsonify, session, abort
+from flask import Blueprint, flash, redirect, render_template, request, url_for, jsonify, session, abort, request
 
 from .extensions import db
 from .models import Restaurante, Plato, Pedido, ItemPedido
 from .auth.decorators import requires_auth
 from decimal import Decimal, InvalidOperation
+from sqlalchemy.orm import selectinload
 
 bp = Blueprint("lacarta", __name__)
 
@@ -34,6 +35,26 @@ def listar_restaurantes():
         'restaurantes/index.html',
         restaurantes=restaurantes
     )
+
+@bp.route("/api/restaurantes", methods=["GET"])
+def api_listar_restaurantes():
+    query = Restaurante.query
+
+    restaurantes = query.options(
+        selectinload(Restaurante.platos)
+    ).order_by(Restaurante.nombre).all()
+
+    return jsonify({
+        "restaurantes": [
+            {
+                "id": restaurante.id,
+                "nombre": restaurante.nombre,
+                "ciudad": restaurante.ciudad,
+                "platos_count": len(restaurante.platos)
+            }
+            for restaurante in restaurantes
+        ]
+    })
 
 @bp.route("/restaurantes/<int:restaurante_id>")
 def detalle_restaurante(restaurante_id):

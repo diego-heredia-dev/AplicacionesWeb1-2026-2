@@ -1,0 +1,33 @@
+<body>
+    <div id="app">
+
+        <header class="app-header">
+            <h1 class="app-header__title">La Carta</h1>
+            <p class="app-header__subtitle">
+                Sistema de gestión de restaurantes
+            </p>
+        </header>
+
+        <main class="restaurant-list">
+            <h2 class="restaurant-list__title">Restaurantes</h2>
+
+            <div
+                class="restaurant-list__container"
+                id="restaurants"
+            >
+                <p>Cargando restaurantes...</p>
+            </div>
+        </main>
+
+    </div>
+
+    <template id="restaurant-card-template">
+        <article class="restaurant-card">
+            <h3 class="restaurant-card__name"></h3>
+            <p class="restaurant-card__city"></p>
+            <p class="restaurant-card__dishes"></p>
+        </article>
+    </template>
+
+    <script type="module" src="./js/main.js"></script>
+</body>

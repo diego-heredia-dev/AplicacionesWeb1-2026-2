@@ -1,0 +1,15 @@
+.app-header {
+    padding: 24px;
+    background-color: #1f2937;
+    color: white;
+}
+
+.app-header__title {
+    margin: 0;
+    font-size: 28px;
+}
+
+.app-header__subtitle {
+    margin-top: 8px;
+    font-size: 14px;
+}
